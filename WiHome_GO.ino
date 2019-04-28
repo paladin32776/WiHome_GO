@@ -29,21 +29,6 @@ void setup()
   go.dump_flash(GO_NVM_OFFSET,32);
 }
 
-// void report2()
-// {}
-//
-//
-// void report(char* parameter, int value)
-// {
-//   Serial.printf("Reporting %s = %d.\n",parameter, value);
-//   DynamicJsonBuffer jsonBuffer;
-//   JsonObject& root = jsonBuffer.createObject();
-//   root["cmd"]="info";
-//   root["parameter"]=parameter;
-//   root["value"]=value;
-//   whc.send(root);
-// }
-
 
 void loop()
 {
