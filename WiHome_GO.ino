@@ -12,7 +12,6 @@ GateOpenerStateMachine go(GO_MOT_PIN_A, GO_MOT_PIN_B, GO_POS_PIN, GO_ISENS_PIN, 
 NoBounceButtons nbb;
 char button;
 
-
 void setup()
 {
   if (SERIAL_DEBUG)
@@ -112,6 +111,16 @@ void loop()
         {
           go.set_auto_close_time((int)root["auto_close_time"]);
           whc.sendJSON("cmd","info","auto_close_time",go.get_auto_close_time());
+        }
+        if (root.containsKey("open_position"))
+        {
+          go.set_open_position((int)root["open_position"]);
+          whc.sendJSON("cmd","info","open_position",go.get_open_position());
+        }
+        if (root.containsKey("closed_position"))
+        {
+          go.set_closed_position((int)root["closed_position"]);
+          whc.sendJSON("cmd","info","closed_position",go.get_closed_position());
         }
       }
       // Get status:
