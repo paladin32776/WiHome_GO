@@ -40,7 +40,7 @@ void loop()
   led.check();
   go.check();
 
-  if ((go.get_state()!=last_go_state) && (go.get_state()==0))
+  if (go.just_stopped())
     whc.sendJSON("cmd","info",
                  "state",go.get_state(),
                  "position",go.get_position(),
