@@ -3,6 +3,7 @@
 #include "SignalLED.h"
 #include "WiHome_Config.h"
 #include "GateOpenerStateMachine.h"
+#include "EnoughTimePassed.h"
 
 WiHomeComm whc;
 
@@ -11,6 +12,8 @@ SignalLED led(PIN_LED,SLED_BLINK_FAST_1,PIN_LED_ACTIVE_LOW);
 GateOpenerStateMachine go(GO_MOT_PIN_A, GO_MOT_PIN_B, GO_POS_PIN, GO_ISENS_PIN, GO_LED_PIN, GO_NVM_OFFSET);
 NoBounceButtons nbb;
 char button;
+EnoughTimePassed etp_position(POSITION_FEEBACK_INTERVALL); // Timer for position feedback while motor is running
+
 
 void setup()
 {
@@ -40,7 +43,7 @@ void loop()
   led.check();
   go.check();
 
-  if (go.just_stopped())
+  if (go.just_stopped() || (go.is_running() && etp_position.enough_time()))
     whc.sendJSON("cmd","info",
                  "state",go.get_state(),
                  "position",go.get_position(),
@@ -112,6 +115,11 @@ void loop()
           go.set_auto_close_time((int)root["auto_close_time"]);
           whc.sendJSON("cmd","info","auto_close_time",go.get_auto_close_time());
         }
+        if (root.containsKey("max_on_time"))
+        {
+          go.set_max_on_time((int)root["max_on_time"]);
+          whc.sendJSON("cmd","info","max_on_time",go.get_max_on_time());
+        }
         if (root.containsKey("open_position"))
         {
           go.set_open_position((int)root["open_position"]);
@@ -123,6 +131,18 @@ void loop()
           whc.sendJSON("cmd","info","closed_position",go.get_closed_position());
         }
       }
+      // Learn/clear open position:
+      if (root["cmd"]=="learn_open_position")
+      {
+        go.learn_open_position();
+        whc.sendJSON("cmd","info","open_position",go.get_open_position());
+      }
+      // Learn/clear closed position:
+      if (root["cmd"]=="learn_closed_position")
+      {
+        go.learn_closed_position();
+        whc.sendJSON("cmd","info","closed_position",go.get_closed_position());
+      }
       // Get status:
       if (root["cmd"]=="get_status")
           whc.sendJSON("cmd","info",
@@ -130,13 +150,14 @@ void loop()
                        "position",go.get_position(),
                        "position_percent",go.get_position_percent(),
                        "imotor", go.get_imotor());
-      // Get status:
+      // Get parameters:
       if (root["cmd"]=="get_parameters")
           whc.sendJSON("cmd","info",
                        "max_imotor",go.get_max_imotor(),
                        "auto_close_time",go.get_auto_close_time(),
                        "closed_position",go.get_closed_position(),
-                       "open_position", go.get_open_position());
+                       "open_position", go.get_open_position(),
+                       "max_on_time",go.get_max_on_time());
       // Get signal:
       if (root["cmd"]=="get_signal")
           whc.sendJSON("cmd","info","signal",WiFi.RSSI());
