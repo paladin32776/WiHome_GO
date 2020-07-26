@@ -91,6 +91,15 @@ void loop()
     whc.softAPmode=true;
     nbb.reset(button);
   }
+  if (nbb.action(button)==4)
+  {
+    if (go.learn_open_position())
+      Serial.println("Stored open position.");
+    else
+      Serial.println("Open position cleared.");
+    whc.sendJSON("cmd","info","open_position",go.get_open_position());
+    nbb.reset(button);
+  }
 
   // React to received JSON command objects:
   if (root!=JsonObject::invalid())
