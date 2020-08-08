@@ -1,7 +1,7 @@
 #include "WiHomeComm.h"
 #include "NoBounceButtons.h"
 #include "SignalLED.h"
-#include "WiHome_Config.h"
+#include "WiHome_GO_Config.h"
 #include "GateOpenerStateMachine.h"
 #include "EnoughTimePassed.h"
 
