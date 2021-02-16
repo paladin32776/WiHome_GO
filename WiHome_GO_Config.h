@@ -5,6 +5,9 @@
 #define PIN_LED_ACTIVE_LOW false
 #define PIN_BUTTON  0
 
+#define PIN_RELAY   15
+#define PIN_RELAY_ACTIVE_LOW false
+
 // GateOpener config
 #define GO_MOT_PIN_A 12
 #define GO_MOT_PIN_B 13

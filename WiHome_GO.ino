@@ -7,8 +7,8 @@
 
 WiHomeComm whc;
 
-SignalLED led(PIN_LED,SLED_BLINK_FAST_1,PIN_LED_ACTIVE_LOW);
-// SignalLED relay(PIN_RELAY,SLED_OFF,PIN_RELAY_ACTIVE_LOW);
+SignalLED led(PIN_LED, SLED_BLINK_FAST_1, PIN_LED_ACTIVE_LOW);
+SignalLED warning_light(PIN_RELAY, SLED_OFF, PIN_RELAY_ACTIVE_LOW);
 GateOpenerStateMachine go(GO_MOT_PIN_A, GO_MOT_PIN_B, GO_POS_PIN, GO_ISENS_PIN, GO_LED_PIN, GO_NVM_OFFSET);
 NoBounceButtons nbb;
 char button;
@@ -117,27 +117,27 @@ void loop()
         if (root.containsKey("max_imotor"))
         {
           go.set_max_imotor((int)root["max_imotor"]);
-          whc.sendJSON("cmd","info","max_imotor",go.get_max_imotor());
+          whc.sendJSON("cmd","confirm","max_imotor",go.get_max_imotor());
         }
         if (root.containsKey("auto_close_time"))
         {
           go.set_auto_close_time((int)root["auto_close_time"]);
-          whc.sendJSON("cmd","info","auto_close_time",go.get_auto_close_time());
+          whc.sendJSON("cmd","confirm","auto_close_time",go.get_auto_close_time());
         }
         if (root.containsKey("max_on_time"))
         {
           go.set_max_on_time((int)root["max_on_time"]);
-          whc.sendJSON("cmd","info","max_on_time",go.get_max_on_time());
+          whc.sendJSON("cmd","confirm","max_on_time",go.get_max_on_time());
         }
         if (root.containsKey("open_position"))
         {
           go.set_open_position((int)root["open_position"]);
-          whc.sendJSON("cmd","info","open_position",go.get_open_position());
+          whc.sendJSON("cmd","confirm","open_position",go.get_open_position());
         }
         if (root.containsKey("closed_position"))
         {
           go.set_closed_position((int)root["closed_position"]);
-          whc.sendJSON("cmd","info","closed_position",go.get_closed_position());
+          whc.sendJSON("cmd","confirm","closed_position",go.get_closed_position());
         }
       }
       // Learn/clear open position:
